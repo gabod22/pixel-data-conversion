@@ -30,7 +30,11 @@ garantia_col = []
 testimonio_col = []
 total_cost_col = []
 for inx in range(len(servces_index)-1):
-    dispositivo = workbook['Dispositivos Asignados'].iloc[servces_index[inx]][1:]
+    dispositivo = str(
+        workbook['Dispositivos Asignados'].iloc[servces_index[inx]])
+    print(type(dispositivo))
+    if (type(dispositivo) == 'str'):
+        dispositivo = dispositivo[1:]
 
     garantia = ""
     pattern_celular = re.compile(r'(\d{3}\s?\d{3}\s?\d{4})')
