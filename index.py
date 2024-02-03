@@ -35,16 +35,13 @@ def procesar_os():
         garantia = ""
         (next_inx, next_service_order) = next(
             simplified_service_orders.iterrows())
-        print(inx)
         dispositivo = service_order['Dispositivos Asignados'][1:]
-        print(dispositivo)
         match_celular = pattern_celular.search(dispositivo)
         match_corchetes = pattern_corchetes.search(dispositivo)
 
         if match_celular:
             numero_celular = match_celular.group(1)
             dispositivo = dispositivo.replace(numero_celular, '')
-            print(dispositivo)
             celulares_col.append(numero_celular)
         else:
             celulares_col.append('Sin numero')
@@ -68,11 +65,11 @@ def procesar_os():
         else:
             garantia_col.append('')
 
-        service_order_items = detailed_service_orders.iloc[inx+2:next_inx+1, [
-            1, 2, 3, 4, 5, 6, 7, 8]]
-        itemsDF = pd.DataFrame(service_order_items)
-        itemsDF.columns = items_cols
-        items_with_costs = itemsDF.merge(
+        service_order_items = pd.DataFrame(detailed_service_orders.iloc[inx+2:next_inx-1, [
+            1, 2, 3, 4, 5, 6, 7, 8]])
+        print(service_order_items)
+        service_order_items.columns = items_cols
+        items_with_costs = service_order_items.merge(
             products_cost_df, how='left', on='SKU')
         items_cost = inx, list(items_with_costs[[
             'Descripcion', 'Costo']].to_dict('list').values())
