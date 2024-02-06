@@ -83,30 +83,30 @@ def procesar_os():
         products_cost = list(items_merge_costs[[
             'SKU', 'Cantidad', 'Descripcion', 'Costo']].to_dict('list').values())
 
-        if (type(oc) != float) and (oc in purchase_orders):
-            print(oc)
-            elements = []
-            oc_items_df = purchase_orders[oc]
-            oc_items = list(oc_items_df[[
-                'SKU', 'Cantidad', 'Descripcion', 'Importe']].to_dict('list').values())
-            for i, item in enumerate(products_cost):
-                item += oc_items[i]
-                elements.append(item)
-            products_cost = elements
-            print(products_cost)
-            print('\n')
+        # if (type(oc) != float) and (oc in purchase_orders):
+        #     print(oc)
+        #     elements = []
+        #     oc_items_df = purchase_orders[oc]
+        #     oc_items = list(oc_items_df[[
+        #         'SKU', 'Cantidad', 'Descripcion', 'Importe']].to_dict('list').values())
+        #     for i, item in enumerate(products_cost):
+        #         item += oc_items[i]
+        #         elements.append(item)
+        #     products_cost = elements
+        #     print(products_cost)
+        #     print('\n')
 
-        products_cost_string = [f'{sku} - {quantity} - {producto} - {round(costo, 2)}' for sku, quantity, producto,
-                                costo in zip(products_cost[0], products_cost[1], products_cost[2], products_cost[3])]
+        # products_cost_string = [f'{sku} - {quantity} - {producto} - {round(costo, 2)}' for sku, quantity, producto,
+        #                         costo in zip(products_cost[0], products_cost[1], products_cost[2], products_cost[3])]
 
-        total_cost = round(sum(products_cost[3]), 2)
-        string = array_to_string(products_cost_string)
+        # total_cost = round(sum(products_cost[3]), 2)
+        # string = array_to_string(products_cost_string)
         # print(string)
-        insumos_col.append(string)
-        costos_col.append(total_cost)
+        # insumos_col.append(string)
+        # costos_col.append(total_cost)
 
-    simplified_service_orders.insert(4, "Insumos", insumos_col)
-    simplified_service_orders.insert(5, "Costo total", costos_col)
+    # simplified_service_orders.insert(4, "Insumos", insumos_col)
+    # simplified_service_orders.insert(5, "Costo total", costos_col)
 
     save_excel(simplified_service_orders, 'only_services', 'Servicios')
 
