@@ -3,3 +3,5 @@ arr_no = ['No', 'NO', 'no']
 
 items_cols = ["SKU", "Descripcion", "Cantidad", "Precio unitario",
               "Impuestos", "Porcentaje de descuento", "Subtotal", "Importe"]
+
+comodin = ['SERV006', 'REF COMODÍN']

@@ -1,6 +1,6 @@
+import pandas as pd
 from regex_patterns import pattern_celular, pattern_corchetes
 from constants import arr_no, arr_yes
-import pandas as pd
 
 
 def array_to_string(arr):
