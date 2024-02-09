@@ -1,4 +1,5 @@
 import pandas as pd
+import re
 from regex_patterns import pattern_celular, pattern_corchetes
 from constants import arr_no, arr_yes
 
@@ -23,27 +24,36 @@ def get_last_index(dataframe: pd.DataFrame):
 
 
 def clean_testimony(testimony):
-    phone = get_phone_number(testimony)
-    warranty = get_warranty_status(testimony, True)
+    testimony = testimony.replace('#', '', 1)
     match_corchetes = pattern_corchetes.search(testimony)
+
+    string_split = testimony.split(' ')
     if match_corchetes:
-        testimony = testimony.replace(match_corchetes.group(
-            1), '').replace(warranty, '').replace(phone, '')
+        del string_split[-2:]
     else:
-        testimony = testimony.replace(warranty, '').replace(phone, '')
-    return testimony.replace('[]', '').replace('#', '', 1).strip()
+        if string_split[-1] in arr_no or string_split[-1] in arr_yes:
+            del string_split[-1]
+
+    testimony = ' '.join(string_split)
+
+    testimony = re.sub('^[\d\s]+', '', testimony)
+    testimony = re.sub('VIN', '', testimony)
+    result = testimony.replace('[]', '').strip().capitalize()
+    return result
 
 
-def get_phone_number(strnig):
+def get_phone_number(strnig, raw: bool = False):
     match_celular = pattern_celular.search(strnig)
     if match_celular:
         numero_celular = match_celular.group(1)
-        numero_celular = numero_celular.replace(' ', '')
+        if not raw:
+            numero_celular = numero_celular.replace(' ', '')
         return numero_celular
+
     return 'Sin celular'
 
 
-def get_warranty_status(string, raw: bool):
+def get_warranty_status(string, raw: bool = False):
     match_corchetes = pattern_corchetes.search(string)
     string_split = string.split(' ')
     if match_corchetes:
