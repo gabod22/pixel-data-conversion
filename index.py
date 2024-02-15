@@ -8,7 +8,7 @@ from ui.mainwindow_ui import Ui_MainWindow
 
 import pandas as pd
 import sys
-from constants import items_cols, comodin
+from constants import items_cols, comodin, services_colums, purshace_columns
 from helpers import get_phone_number, get_warranty_status, clean_testimony, array_to_string, get_last_index
 
 
@@ -37,7 +37,8 @@ class MainWindow(QMainWindow):
         items_oc = {}
         detailed_purchase_orders = pd.read_excel(filepath)
         detailed_purchase_orders.drop(
-            detailed_purchase_orders.index[0:5], inplace=True)
+            detailed_purchase_orders.index[0:7], inplace=True)
+        detailed_purchase_orders.set_axis(purshace_columns, axis=1)
         simplified_purchase_orders = detailed_purchase_orders.dropna(
             subset=['Folio'], inplace=False)
         purchase_orders_last_index = get_last_index(detailed_purchase_orders)
@@ -66,7 +67,8 @@ class MainWindow(QMainWindow):
     def process_os(self, filepath):
         detailed_service_orders = pd.read_excel(filepath)
         detailed_service_orders.drop(
-            detailed_service_orders.index[0:5], inplace=True)
+            detailed_service_orders.index[0:7], inplace=True)
+        detailed_service_orders.set_axis(services_colums, axis=1)
         print(detailed_service_orders)
         return detailed_service_orders
 
@@ -90,9 +92,6 @@ class MainWindow(QMainWindow):
         simplified_service_orders.drop(simplified_service_orders.columns[simplified_service_orders.columns.str.contains(
             'unnamed', case=False)], axis=1, inplace=True)
         # simplified_service_orders.drop('Ultima modificación', axis=1, inplace=True)
-
-        simplified_service_orders.rename(
-            columns={'Dispositivos Asignados': 'Testimonio', 'Entrego': 'Orden de compra'}, inplace=True)
 
         ordenes_servicio_last_index = get_last_index(detailed_service_orders)
 
