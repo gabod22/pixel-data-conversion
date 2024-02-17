@@ -57,3 +57,6 @@ class PandasModel(QAbstractTableModel):
                 return str(self._dataframe.index[section])
 
         return None
+
+    def cell(self, row: int, col: int):
+        return str(self._dataframe.iloc[row, col])

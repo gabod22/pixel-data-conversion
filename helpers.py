@@ -8,7 +8,7 @@ def array_to_string(arr):
     string = ''
     for (i, item) in enumerate(arr):
         if i > 0:
-            string += "\n" + item
+            string += "," + item
         else:
             string += item
     return string

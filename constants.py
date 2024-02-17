@@ -8,6 +8,6 @@ services_colums = ["Folio",	"Nombre",	"Fecha registro",	"Ultima modificación",
                    "Importe total",	"Estado",	"Orden de compra",	"Testimonio", "unnamed", "unnamed"]
 
 purshace_columns = ["Folio",	"Proveedor",	"Estado",	"Fecha registro",	"Registró - Nombre",
-                    "Fecha autorización",	"Usuario autorizó - Nombre",	"Importe" "total",	"Comentarios", "unnamed"]
+                    "Fecha autorización",	"Usuario autorizó - Nombre",	"Importe" "total",	"Comentarios"]
 
 comodin = ['SERV006', 'REF COMODÍN']
