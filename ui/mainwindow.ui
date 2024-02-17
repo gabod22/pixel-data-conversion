@@ -93,7 +93,7 @@
        </layout>
       </item>
       <item>
-       <widget class="QTableView" name="tableView"/>
+       <widget class="QTableWidget" name="TableServices"/>
       </item>
       <item>
        <widget class="QPushButton" name="BtnProcessFiles">

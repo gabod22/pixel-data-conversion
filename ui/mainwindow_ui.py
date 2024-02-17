@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.1
+## Created by: Qt User Interface Compiler version 6.6.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -17,8 +17,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QHeaderView, QLabel,
     QLineEdit, QMainWindow, QMenuBar, QPushButton,
-    QSizePolicy, QStatusBar, QTableView, QVBoxLayout,
-    QWidget)
+    QSizePolicy, QStatusBar, QTableWidget, QTableWidgetItem,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -106,10 +106,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_4.addLayout(self.verticalLayout_3)
 
-        self.tableView = QTableView(self.centralwidget)
-        self.tableView.setObjectName(u"tableView")
+        self.TableServices = QTableWidget(self.centralwidget)
+        self.TableServices.setObjectName(u"TableServices")
 
-        self.verticalLayout_4.addWidget(self.tableView)
+        self.verticalLayout_4.addWidget(self.TableServices)
 
         self.BtnProcessFiles = QPushButton(self.centralwidget)
         self.BtnProcessFiles.setObjectName(u"BtnProcessFiles")
