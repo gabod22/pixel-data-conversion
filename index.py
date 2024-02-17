@@ -120,26 +120,30 @@ class MainWindow(QMainWindow):
                 1, 2, 3, 4, 5, 6, 7, 8]])
             service_order_items.columns = items_cols
 
-            oc = simplified_service_orders['Orden de compra'].iloc[inx]
+            oc_full_text = str(
+                simplified_service_orders['Orden de compra'].iloc[inx])
+            oc_list = oc_full_text.split(',')
 
             items_merge_costs = service_order_items.merge(
                 products_cost_df, how='left', on='SKU')
             items_merge_costs = items_merge_costs[items_merge_costs['SKU'].str.contains(
                 'Gar001|Gar002|S0005') == False]
 
-            if (type(oc) != float) and (oc in purchase_orders):
-                print(oc)
-                items_merge_costs = items_merge_costs[items_merge_costs['SKU'].str.contains(
-                    'REF COMODÍN|SERV006') == False]
+            for oc in oc_list:
+                if oc in purchase_orders:
+                    print(oc)
+                    items_merge_costs = items_merge_costs[items_merge_costs['SKU'].str.contains(
+                        'REF COMODÍN|SERV006') == False]
 
-                oc_items_df = purchase_orders[oc]
-                oc_items_df['Costo'] = oc_items_df['Importe']
-                items_merge_costs = pd.concat([items_merge_costs, oc_items_df])
-                print(items_merge_costs)
-                # for i, item in enumerate(products_cost):
-                #     item += oc_items[i]
-                #     elements.append(item)
-                # products_cost = elements
+                    oc_items_df = purchase_orders[oc]
+                    oc_items_df['Costo'] = oc_items_df['Importe']
+                    items_merge_costs = pd.concat(
+                        [items_merge_costs, oc_items_df])
+
+                else:
+                    print("No encontré la orden ", oc)
+
+            print(items_merge_costs)
 
             products_cost = list(items_merge_costs[[
                 'SKU', 'Cantidad', 'Descripcion', 'Costo']].to_dict('list').values())
