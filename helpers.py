@@ -1,6 +1,6 @@
 import pandas as pd
 import re
-from regex_patterns import pattern_celular, pattern_corchetes
+from regex_patterns import pattern_celular, pattern_corchetes, pattern_purchase
 from constants import arr_no, arr_yes
 
 
@@ -51,6 +51,14 @@ def get_phone_number(strnig, raw: bool = False):
         return numero_celular
 
     return 'Sin celular'
+
+
+def check_oc_pattern(string):
+    string = str(string)
+    match_oc = pattern_purchase.search(string)
+    if match_oc:
+        return True
+    return False
 
 
 def get_warranty_status(string, raw: bool = False):

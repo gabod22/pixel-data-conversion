@@ -9,7 +9,7 @@ from ui.mainwindow_ui import Ui_MainWindow
 import pandas as pd
 import sys
 from constants import items_cols, services_colums, purshace_columns
-from helpers import get_phone_number, get_warranty_status, clean_testimony, array_to_string, get_last_index
+from helpers import get_phone_number, get_warranty_status, clean_testimony, array_to_string, get_last_index, check_oc_pattern
 
 
 class MainWindow(QMainWindow):
@@ -146,6 +146,8 @@ class MainWindow(QMainWindow):
             services_colums, axis=1)
         detailed_service_orders = detailed_service_orders.reset_index(
             drop=True)
+        detailed_service_orders = detailed_service_orders.apply(
+            lambda row: row['Orden de compra'] if check_oc_pattern(row['Orden de compra']) else "", axis=1)
         print(detailed_service_orders)
         return detailed_service_orders
 
