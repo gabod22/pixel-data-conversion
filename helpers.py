@@ -2,6 +2,7 @@ import pandas as pd
 import re
 from regex_patterns import pattern_celular, pattern_corchetes, pattern_purchase
 from constants import arr_no, arr_yes
+import math
 
 
 def array_to_string(arr):
@@ -59,6 +60,13 @@ def check_oc_pattern(string):
     if match_oc:
         return True
     return False
+
+
+def replace_nan(string):
+    if type(string) == float:
+        print(string, type(string))
+        return ''
+    return f'({string})'
 
 
 def get_warranty_status(string, raw: bool = False):
