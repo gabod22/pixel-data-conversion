@@ -1,4 +1,6 @@
 .venv
 only_services.xlsx
-__pycahe__
+__pycache__
 ~$*.xlsx
+build
+dist
