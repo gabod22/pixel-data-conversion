@@ -134,7 +134,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Pixel Kor Converter", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"ARCHIVO DE EXCEL DE LAS ORDENES DE SERVICIO", None))
         self.BtnSearchOSFile.setText(QCoreApplication.translate("MainWindow", u"Buscar documento", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"ARCHIVO DE EXEL DE LAS ORDENES DE COMRPA", None))
