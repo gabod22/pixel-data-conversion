@@ -3,6 +3,7 @@ from PySide6.QtWidgets import QDialog, QTableWidgetItem
 import pandas as pd
 from ui.process_dialog_ui import Ui_ProcessDialog
 from modules.worker import Worker
+from tabulate import tabulate
 
 from constants import items_cols, services_colums, purshace_columns
 from modules.helpers import (
@@ -67,7 +68,10 @@ class ProcessDialog(QDialog):
         return products_cost_df
 
     def process_os(self, filepath):
-        detailed_service_orders = pd.read_excel(filepath)
+        detailed_service_orders = pd.read_excel(
+            filepath, converters={"Unnamed: 3": str}
+        )
+        # print(detailed_service_orders)
         detailed_service_orders.drop(detailed_service_orders.index[0:7], inplace=True)
         detailed_service_orders = detailed_service_orders.set_axis(
             services_colums, axis=1
@@ -174,9 +178,21 @@ class ProcessDialog(QDialog):
                 ]
             )
             service_order_items.columns = items_cols
+
             substring = "No hay registro"
             filter = service_order_items["SKU"].str.contains(substring)
             service_order_items = service_order_items[~filter]
+
+            service_order_items["Cantidad"] = service_order_items["Cantidad"].astype(
+                float
+            )
+
+            # print(os)
+            # for i in service_order_items.index:
+            #     print(
+            #         service_order_items["Cantidad"][i],
+            #         type(service_order_items["Cantidad"][i]),
+            #     )
 
             oc_full_text = str(simplified_service_orders["Orden de compra"].iloc[inx])
             oc_full_text = oc_full_text.replace(" ", "").replace("/", ",")
@@ -188,6 +204,14 @@ class ProcessDialog(QDialog):
             items_merge_costs = items_merge_costs[
                 items_merge_costs["SKU"].str.contains("Gar001|Gar002") == False
             ]
+
+            # print(tabulate(items_merge_costs, headers="keys", tablefmt="psql"))
+            items_merge_costs["Sub Costo Total"] = items_merge_costs.apply(
+                lambda row: float(row["Cantidad"]) * float(row["Costo"]), axis=1
+            )
+            # print("despeus")
+            # print(tabulate(items_merge_costs, headers="keys", tablefmt="psql"))
+            # print(items_merge_costs.style)
             if oc_list != [""]:
                 print(oc_list)
                 for oc in oc_list:
@@ -199,13 +223,12 @@ class ProcessDialog(QDialog):
                         ]
 
                         oc_items_df = purchase_orders[oc]
-                        oc_items_df["Costo"] = oc_items_df["Importe"]
+                        oc_items_df["Sub Costo Total"] = oc_items_df["Importe"]
                         oc_items_df["oc"] = oc_items_df.apply(lambda row: oc, axis=1)
                         progress_callback.emit(
                             "Agregando la info nueva a la orden de servicio"
                         )
                         items_merge_costs = pd.concat([items_merge_costs, oc_items_df])
-                        print(items_merge_costs)
 
                     else:
                         items_merge_costs["oc"] = items_merge_costs.apply(
@@ -218,7 +241,9 @@ class ProcessDialog(QDialog):
                     lambda row: "", axis=1
                 )
             products_cost = list(
-                items_merge_costs[["SKU", "Cantidad", "Descripcion", "Costo", "oc"]]
+                items_merge_costs[
+                    ["SKU", "Cantidad", "Descripcion", "Sub Costo Total", "oc"]
+                ]
                 .to_dict("list")
                 .values()
             )
