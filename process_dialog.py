@@ -201,50 +201,41 @@ class ProcessDialog(QDialog):
                         oc_items_df = purchase_orders[oc]
                         oc_items_df["Costo"] = oc_items_df["Importe"]
                         oc_items_df["oc"] = oc_items_df.apply(lambda row: oc, axis=1)
+                        progress_callback.emit(
+                            "Agregando la info nueva a la orden de servicio"
+                        )
                         items_merge_costs = pd.concat([items_merge_costs, oc_items_df])
                         print(items_merge_costs)
 
                     else:
+                        items_merge_costs["oc"] = items_merge_costs.apply(
+                            lambda row: "", axis=1
+                        )
                         progress_callback.emit("No se encontró la orden " + oc)
                         print("No encontré la orden ", oc)
-                progress_callback.emit("Agregando la info nueva a la orden de servicio")
-                products_cost = list(
-                    items_merge_costs[["SKU", "Cantidad", "Descripcion", "Costo", "oc"]]
-                    .to_dict("list")
-                    .values()
-                )
-                products_cost_string = [
-                    f"{sku} - {quantity} - {producto} - {round(costo, 2)} {replace_nan(oc)}".replace(
-                        "\n", ""
-                    ).replace(
-                        "\r", ""
-                    )
-                    for sku, quantity, producto, costo, oc in zip(
-                        products_cost[0],
-                        products_cost[1],
-                        products_cost[2],
-                        products_cost[3],
-                        products_cost[4],
-                    )
-                ]
             else:
-                products_cost = list(
-                    items_merge_costs[["SKU", "Cantidad", "Descripcion", "Costo"]]
-                    .to_dict("list")
-                    .values()
+                items_merge_costs["oc"] = items_merge_costs.apply(
+                    lambda row: "", axis=1
                 )
-
-                products_cost_string = [
-                    f"{sku} - {quantity} - {producto} - {round(costo, 2)}".replace(
-                        "\n", ""
-                    )
-                    for sku, quantity, producto, costo in zip(
-                        products_cost[0],
-                        products_cost[1],
-                        products_cost[2],
-                        products_cost[3],
-                    )
-                ]
+            products_cost = list(
+                items_merge_costs[["SKU", "Cantidad", "Descripcion", "Costo", "oc"]]
+                .to_dict("list")
+                .values()
+            )
+            products_cost_string = [
+                f"{sku} - {quantity} - {producto} - {round(costo, 2)} {replace_nan(oc)}".replace(
+                    "\n", ""
+                ).replace(
+                    "\r", ""
+                )
+                for sku, quantity, producto, costo, oc in zip(
+                    products_cost[0],
+                    products_cost[1],
+                    products_cost[2],
+                    products_cost[3],
+                    products_cost[4],
+                )
+            ]
 
             total_cost = round(sum(products_cost[3]), 2)
             string = array_to_string(products_cost_string)
@@ -257,4 +248,5 @@ class ProcessDialog(QDialog):
         simplified_service_orders = simplified_service_orders.reset_index(drop=True)
         progress_callback.emit("Agregando resultado a la tabla")
         add_to_table(self, simplified_service_orders, self.parent.ui.TableServices)
+
         # self.save_excel(simplified_service_orders, "only_services", "Servicios")
