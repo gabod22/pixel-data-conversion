@@ -87,14 +87,15 @@ def replace_nan(string):
     return f"({string})"
 
 
-def get_warranty_status(string, raw: bool = False):
+def get_warranty_status(string: str, raw: bool = False):
     match_corchetes = pattern_corchetes.search(string)
-    string_split = string.split(" ")
-    if match_corchetes:
-        garantia = string_split[-2]
 
-    else:
-        garantia = string_split[-1]
+    if match_corchetes:
+        string = string.replace(match_corchetes.group(1), "")
+    string = string.strip()
+    string_split = string.split(" ")
+    garantia = string_split[-1]
+    print(garantia)
     """Determina si la orden de servicio es garantía y lo añade a un array de elementos
     """
     if raw and (garantia in arr_no or garantia in arr_yes):
