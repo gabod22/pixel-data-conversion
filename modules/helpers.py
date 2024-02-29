@@ -30,19 +30,21 @@ def clean_testimony(testimony):
     testimony = testimony.replace("#", "", 1)
     match_corchetes = pattern_corchetes.search(testimony)
 
-    string_split = testimony.split(" ")
     if match_corchetes:
-        del string_split[-2:]
-    else:
-        if string_split[-1] in arr_no or string_split[-1] in arr_yes:
-            del string_split[-1]
+        testimony = testimony.replace(match_corchetes.group(1), "")
+    testimony = testimony.strip()
+
+    string_split = testimony.split(" ")
+
+    if string_split[-1] in arr_no or string_split[-1] in arr_yes:
+        del string_split[-1]
 
     testimony = " ".join(string_split)
 
     testimony = re.sub("^[\d\s]+", "", testimony)
     testimony = re.sub("VIN", "", testimony)
-    result = testimony.replace("[]", "").strip().capitalize()
-    return result
+    testimony = testimony.replace("[]", "").strip().capitalize()
+    return testimony
 
 
 def get_phone_number(strnig, raw: bool = False):
@@ -95,7 +97,7 @@ def get_warranty_status(string: str, raw: bool = False):
     string = string.strip()
     string_split = string.split(" ")
     garantia = string_split[-1]
-    print(garantia)
+    # print(garantia)
     """Determina si la orden de servicio es garantía y lo añade a un array de elementos
     """
     if raw and (garantia in arr_no or garantia in arr_yes):
