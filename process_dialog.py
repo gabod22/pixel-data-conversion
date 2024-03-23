@@ -34,7 +34,11 @@ class ProcessDialog(QDialog):
 
     def procesar_oc(self, filepath):
         items_oc = {}
-        detailed_purchase_orders = pd.read_excel(filepath)
+        try:
+            detailed_purchase_orders = pd.read_excel(filepath)
+        except Exception as e:
+            raise "No se pudo abrir el documento:" + e
+
         detailed_purchase_orders.drop(detailed_purchase_orders.index[0:7], inplace=True)
         detailed_purchase_orders = detailed_purchase_orders.reset_index(drop=True)
         detailed_purchase_orders = detailed_purchase_orders.set_axis(
@@ -119,12 +123,27 @@ class ProcessDialog(QDialog):
         if os_path == "" or oc_path == "" or products_path == "":
             on_error.emit(("error", "Falta la ubicación de algún documento"))
 
-        progress_callback.emit("Importando ordenes de servicio")
-        detailed_service_orders = self.process_os(os_path)
-        progress_callback.emit("Importando ordenes de compra")
-        purchase_orders = self.procesar_oc(oc_path)
-        progress_callback.emit("Importando productos")
-        products_cost_df = self.process_products(products_path)
+        try:
+            progress_callback.emit("Importando ordenes de servicio")
+            detailed_service_orders = self.process_os(os_path)
+        except Exception as e:
+            on_error.emit(
+                "Error al obtener las ordenes de compra, compurebe el archivo"
+            )
+
+        try:
+            progress_callback.emit("Importando ordenes de compra")
+            purchase_orders = self.procesar_oc(oc_path)
+        except Exception as e:
+            progress_callback.emit(e)
+            on_error.emit(
+                "Error al obtener las ordenes de compra, compurebe el archivo"
+            )
+        try:
+            progress_callback.emit("Importando productos")
+            products_cost_df = self.process_products(products_path)
+        except Exception as e:
+            on_error.emit("Error al obtener los productos, compurebe el archivo")
         # Clean the table
         progress_callback.emit("Simplificando excel de ordenes de servicio")
         simplified_service_orders = detailed_service_orders.dropna(
