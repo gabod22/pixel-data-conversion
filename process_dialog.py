@@ -14,6 +14,7 @@ from modules.helpers import (
     get_last_index,
     check_oc_pattern,
     replace_nan,
+    replace_nan2,
     add_to_table,
 )
 
@@ -157,14 +158,19 @@ class ProcessDialog(QDialog):
             axis=1,
             inplace=True,
         )
+        
+        # Create Solition column
+        simplified_service_orders["Solucion"] = simplified_service_orders.apply(
+            lambda row: replace_nan2(row["Solucion"]), axis=1
+        )
 
         ordenes_servicio_last_index = get_last_index(detailed_service_orders)
         progress_callback.emit("Obteniendo telefono")
-        # Create contact column
-        contact_column = simplified_service_orders.apply(
-            lambda row: get_phone_number(row["Testimonio"]), axis=1
-        )
-        simplified_service_orders.insert(3, "Contacto", contact_column)
+        # # Create contact column
+        # contact_column = simplified_service_orders.apply(
+        #     lambda row: get_phone_number(row["Testimonio"]), axis=1
+        # )
+        # simplified_service_orders.insert(3, "Contacto", contact_column)
         # Create warranty column
         progress_callback.emit("Obteniendo garantía")
         warranty = simplified_service_orders.apply(
@@ -172,10 +178,10 @@ class ProcessDialog(QDialog):
         )
         simplified_service_orders.insert(5, "¿Garantía?", warranty)
         # Create testimony column
-        progress_callback.emit("Obteniendo testimonio")
-        simplified_service_orders["Testimonio"] = simplified_service_orders.apply(
-            lambda row: clean_testimony(row["Testimonio"]), axis=1
-        )
+        # progress_callback.emit("Obteniendo testimonio")
+        # simplified_service_orders["Testimonio"] = simplified_service_orders.apply(
+        #     lambda row: clean_testimony(row["Testimonio"]), axis=1
+        # )
         progress_callback.emit("Modificando el importe total")
         simplified_service_orders["Importe total"] = simplified_service_orders.apply(
             lambda row: round(float(row["Importe total"]), 2), axis=1

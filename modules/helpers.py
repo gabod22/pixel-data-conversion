@@ -88,6 +88,13 @@ def replace_nan(string):
         return ""
     return f"({string})"
 
+def replace_nan2(string):
+    if type(string) == float:
+        print(string, type(string))
+        return ""
+    return f"{string}"
+
+
 
 def get_warranty_status(string: str, raw: bool = False):
     match_corchetes = pattern_corchetes.search(string)

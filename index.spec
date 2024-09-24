@@ -5,13 +5,14 @@ a = Analysis(
     ['index.py'],
     pathex=[],
     binaries=[],
-    datas=[('icono.ico', '.')],
+    datas=[],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
     noarchive=False,
+    optimize=0,
 )
 pyz = PYZ(a.pure)
 
