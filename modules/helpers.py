@@ -90,7 +90,7 @@ def replace_nan(string):
 
 def replace_nan2(string):
     if type(string) == float:
-        print(string, type(string))
+        # print(string, type(string))
         return ""
     return f"{string}"
 

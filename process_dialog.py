@@ -23,6 +23,7 @@ class ProcessDialog(QDialog):
 
     def __init__(self, parent):
         super().__init__(parent)
+        pd.options.mode.copy_on_write = True
         self.setWindowFlag(Qt.WindowStaysOnTopHint, True)
         self.parent = parent
         self.ui = Ui_ProcessDialog()
@@ -35,11 +36,12 @@ class ProcessDialog(QDialog):
 
     def procesar_oc(self, filepath):
         items_oc = {}
-        try:
-            detailed_purchase_orders = pd.read_excel(filepath)
-        except Exception as e:
-            raise "No se pudo abrir el documento:" + e
-
+        # try:
+        detailed_purchase_orders = pd.read_excel(filepath)
+        # print(tabulate(detailed_purchase_orders))
+        # except Exception as e:
+            # raise "No se pudo abrir el documento:" + e
+        print('antes de simplificar')
         detailed_purchase_orders.drop(detailed_purchase_orders.index[0:7], inplace=True)
         detailed_purchase_orders = detailed_purchase_orders.reset_index(drop=True)
         detailed_purchase_orders = detailed_purchase_orders.set_axis(
@@ -48,11 +50,11 @@ class ProcessDialog(QDialog):
         simplified_purchase_orders = detailed_purchase_orders.dropna(
             subset=["Folio"], inplace=False
         )
+        # print(tabulate(simplified_purchase_orders))
         purchase_orders_last_index = get_last_index(detailed_purchase_orders)
         purchase_order_indexs = simplified_purchase_orders.index.append(
             pd.Index([purchase_orders_last_index])
         )
-
         for inx in range(len(purchase_order_indexs) - 1):
             purchase_orders_items = pd.DataFrame(
                 detailed_purchase_orders.iloc[
@@ -64,7 +66,7 @@ class ProcessDialog(QDialog):
 
             folio = simplified_purchase_orders["Folio"].iloc[inx]
             items_oc[folio] = purchase_orders_items
-
+        print("Llegue aquí")
         return items_oc
 
     def process_products(self, filepath):
@@ -132,17 +134,20 @@ class ProcessDialog(QDialog):
                 "Error al obtener las ordenes de compra, compurebe el archivo"
             )
 
-        try:
-            progress_callback.emit("Importando ordenes de compra")
-            purchase_orders = self.procesar_oc(oc_path)
-        except Exception as e:
-            progress_callback.emit(e)
-            on_error.emit(
-                "Error al obtener las ordenes de compra, compurebe el archivo"
-            )
+        # try:
+        progress_callback.emit("Importando ordenes de compra")
+        print("imprimendo ordenes de compra")
+        purchase_orders = self.procesar_oc(oc_path)
+        # print(tabulate(purchase_orders))
+        # except Exception as e:
+        #     progress_callback.emit(e)
+        #     on_error.emit(
+        #         "Error al obtener las ordenes de compra, compurebe el archivo"
+        #     )
         try:
             progress_callback.emit("Importando productos")
             products_cost_df = self.process_products(products_path)
+            # print(tabulate(products_cost_df))
         except Exception as e:
             on_error.emit("Error al obtener los productos, compurebe el archivo")
         # Clean the table
@@ -238,7 +243,7 @@ class ProcessDialog(QDialog):
             # print(tabulate(items_merge_costs, headers="keys", tablefmt="psql"))
             # print(items_merge_costs.style)
             if oc_list != [""]:
-                print(oc_list)
+                # print(oc_list)
                 for oc in oc_list:
                     if oc in purchase_orders:
                         progress_callback.emit("Agregando información de la OC:" + oc)
