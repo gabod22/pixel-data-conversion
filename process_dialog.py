@@ -179,7 +179,7 @@ class ProcessDialog(QDialog):
         # Create warranty column
         progress_callback.emit("Obteniendo garantía")
         warranty = simplified_service_orders.apply(
-            lambda row: get_warranty_status(row["Testimonio"]), axis=1
+            lambda row: get_warranty_status(str(row["Testimonio"])), axis=1
         )
         simplified_service_orders.insert(5, "¿Garantía?", warranty)
         # Create testimony column
